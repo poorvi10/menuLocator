@@ -1,0 +1,21 @@
+body {
+    font-family: "Lato", sans-serif;
+}
+#showLocation {
+    background: #f5f5f5;
+    margin: 3px;
+    width: 49%;
+    height: 59px;
+    display: none;
+    float: left;
+    padding: 18px;
+}
+#mySidenav {
+    width: 16%;
+    height: 365px;
+    background: rgb(53,37,76);
+    color: rgb(143,142,145);
+}
+.items {
+    padding: 14px; 
+}
