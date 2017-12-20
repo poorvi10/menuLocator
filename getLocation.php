@@ -58,11 +58,9 @@ if (!empty($_POST['lat']) && !empty($_POST['lgt']) && !empty($_POST['address']))
                 $arr['Desserts_Beverages'][$menuItems->menu_item_name] = [];
                 array_push($arr['Desserts_Beverages'][$menuItems->menu_item_name], $menuItems->is_veg);
                 array_push($arr['Desserts_Beverages'][$menuItems->menu_item_name], $menuItems->price);
-            } else if ($menuItems->category_name === '501') {
-                $arr['501'][$menuItems->menu_item_name] = [];
-                array_push($arr['501'][$menuItems->menu_item_name], $menuItems->is_veg);
-                array_push($arr['501'][$menuItems->menu_item_name], $menuItems->price);
-            } 
+            } else {
+                $arr['error'] = "Select location to browse through the menu";
+            }
         }
     }
     echo json_encode($arr);

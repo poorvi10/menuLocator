@@ -1,27 +1,32 @@
-$(document).ready(function(){
-    
-    /* Locate me Setion */
+/* Locate me Setion */
 
-    // Get current location
-    if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(showLocation);
-    }else{ 
-        $('#location').html('Geolocation is not supported by this browser.');
-    }
+// Get current location
+$("#locateMe").click(function() {
+    showLocation();
+    // if(navigator.geolocation){
+    //     navigator.geolocation.getCurrentPosition(showLocation);
+    // }else{ 
+    //     $('#location').html('Geolocation is not supported by this browser.');
+    // }
 
     // Get logitude and latitude and send it to php
     function showLocation(position){
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
+       // var latitude = position.coords.latitude;
+       // var longitude = position.coords.longitude;
+
+        var latitude = '10.0158605';
+        var longitude = '76.3418666';
         $.ajax({
             type:'POST',
             url:'getLocation.php',
             data:'latitude='+latitude+'&longitude='+longitude,
-            success:function(msg){
-                if(msg){
-                    $("#location").html(msg);
+            success:function(address){
+                if(address){
+                    $("#location").html(address+ ' '+ 'Latitude: '+ latitude + '  Longitude: ' +longitude) 
+                    .slideDown("slow");
                 }else{
-                    $("#location").html('Not Available');
+                    $("#location").html('Not Available')
+                    .slideDown("slow");
                 }
             }
         });
@@ -52,7 +57,9 @@ function initialize() {
     });
 }
 
-// Atocomplete search to get locality, logitude and latitude and to handle the response
+var menuItems = {};
+
+// Autocomplete search to get locality, logitude and latitude and to handle the response
 function codeAddress() {
     $("#showLocation").html("");
     geocoder = new google.maps.Geocoder();
@@ -61,6 +68,7 @@ function codeAddress() {
         if (status == google.maps.GeocoderStatus.OK) {
             var latitude = results[0].geometry.location.lat();
             var longitude = results[0].geometry.location.lng();
+            $("#menuSection").css("display","block");
 
             $("#showLocation").html(
                 "Latitude: "+latitude+
@@ -78,7 +86,7 @@ function codeAddress() {
                 url:'getLocation.php',
                 data: data,
                 success:function(data){
-                    console.log(data);
+                    menuItems = jQuery.parseJSON(data);
                 }
             });
         
@@ -88,3 +96,19 @@ function codeAddress() {
     });
 }
 google.maps.event.addDomListener(window, 'load', initialize);
+
+function getMenu(cat) {
+    var outputText = '';
+    $.each( menuItems[cat], function( key, value ) {
+        if (value[0]) {
+            var is_veg = '<span class="veg"></span>';
+        } else {
+            var is_veg = '<span class="nonveg"></span>';
+        }
+        var divHtml = '<div class="product"><h4 class="productName">'+key+'</h4>'+is_veg+
+            '<p class="productPrice"> $'+value[1]+'</p></div>';
+
+        outputText += divHtml;
+    });
+    $('#showMenu').html(outputText);
+}

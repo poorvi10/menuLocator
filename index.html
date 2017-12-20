@@ -31,7 +31,8 @@
                 </div>
 
                 <!-- Locate Me -->
-                <div class="col-md-4">
+                <div class="col-md-8">
+                    <button type="button" class="btn" id="locateMe">Locate Me</button>
                     <p><span id="location"></span></p>
                 </div>
             </div>
@@ -40,20 +41,20 @@
     </div>
 
     <!-- Menus Section -->
-    <div class="panel panel-default">
+    <div class="panel panel-default" id="menuSection">
         <div class = "panel-heading">
             <h3 class = "panel-title">Menus</h3>
         </div>
               
         <div class="panel-body" id="menus">
             <div id="mySidenav" class="sidenav">
-               <div id="starters" class="items active"><a href="#">Starters</a></div>
-               <div id="regionalDesiDelights" class="items"><a href="#">Regional Desi Delights</a></div>
-               <div id="mainCourse" class="items"><a href="#">Main Course</a></div>
-               <div id="riceParatha" class="items"><a href="#">Rice & Paratha</a></div>
-               <div id="dessertsBeverages" class="items"><a href="#">Desserts & Beverages</a></div>
-               <div id="501" class="items"><a href="#">Misc</a></div>
+               <div id="starters" class="items active" onclick="getMenu('Starters');"><a href="#">Starters</a></div>
+               <div id="regionalDesiDelights" class="items" onclick="getMenu('Regional_Desi_Delights');"><a href="#">Regional Desi Delights</a></div>
+               <div id="mainCourse" class="items"><a href="#" onclick="getMenu('Main_course');">Main Course</a></div>
+               <div id="riceParatha" class="items"><a href="#" onclick="getMenu('Rice_Paratha');">Rice & Paratha</a></div>
+               <div id="dessertsBeverages" class="items"><a href="#" onclick="getMenu('Desserts_Beverages');">Desserts & Beverages</a></div>
             </div>
+            <div id="showMenu"></div>
         </div>
     </div>
 </div>
