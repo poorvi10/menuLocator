@@ -26,43 +26,26 @@ if (!empty($_POST['lat']) && !empty($_POST['lgt']) && !empty($_POST['address']))
     $json = @file_get_contents($url);
     $data = json_decode($json);
     $status = $data->status;
-    $arr['Starters'] = [];
-    $arr['Regional_Desi_Delights'] = [];
-    $arr['Main_course'] = [];
-    $arr['Rice_Paratha'] = [];
-    $arr['Desserts_Beverages'] = [];
-    $arr['501'] = [];
     $_SESSION['menu'] = $data;
-
+    $categories = [];
+    $html = '';
+    $arr = [];
+    
     // Menu items based on category
     if ($data->menu->menu_items) {
         foreach($data->menu->menu_items as $menuItems) {
-
-            if ($menuItems->category_name === 'Starters') {
-                $arr['Starters'][$menuItems->menu_item_name] = [];
-                array_push($arr['Starters'][$menuItems->menu_item_name], $menuItems->is_veg);
-                array_push($arr['Starters'][$menuItems->menu_item_name], $menuItems->price);
-            } else if ($menuItems->category_name === 'Regional Desi Delights') {
-                $arr['Regional_Desi_Delights'][$menuItems->menu_item_name] = [];
-                array_push($arr['Regional_Desi_Delights'][$menuItems->menu_item_name], $menuItems->is_veg);
-                array_push($arr['Regional_Desi_Delights'][$menuItems->menu_item_name], $menuItems->price);
-            } else if ($menuItems->category_name === 'Main course') {
-                $arr['Main_course'][$menuItems->menu_item_name] = [];
-                array_push($arr['Main_course'][$menuItems->menu_item_name], $menuItems->is_veg);
-                array_push($arr['Main_course'][$menuItems->menu_item_name], $menuItems->price);
-            } else if ($menuItems->category_name === 'Rice/Paratha') {
-                $arr['Rice_Paratha'][$menuItems->menu_item_name] = [];
-                array_push($arr['Rice_Paratha'][$menuItems->menu_item_name], $menuItems->is_veg);
-                array_push($arr['Rice_Paratha'][$menuItems->menu_item_name], $menuItems->price);
-            } else if ($menuItems->category_name === 'Desserts/Beverages') {
-                $arr['Desserts_Beverages'][$menuItems->menu_item_name] = [];
-                array_push($arr['Desserts_Beverages'][$menuItems->menu_item_name], $menuItems->is_veg);
-                array_push($arr['Desserts_Beverages'][$menuItems->menu_item_name], $menuItems->price);
-            } else {
-                $arr['error'] = "Select location to browse through the menu";
+            $catName = str_replace(array('/', ' '), '_', $menuItems->category_name);
+            if (!in_array($menuItems->category_name, $categories)) {
+                array_push($categories,$menuItems->category_name);
+                $html .= '<div id="'.strtolower($catName).'" class="items active" onclick="getMenu('.strtolower($catName).')"><a href="#">'.$menuItems->category_name.'</a></div>';  
             }
+            $arr[strtolower($catName)][$menuItems->menu_item_name] = [];
+            array_push($arr[strtolower($catName)][$menuItems->menu_item_name], $menuItems->is_veg);
+            array_push($arr[strtolower($catName)][$menuItems->menu_item_name], $menuItems->price);
+
         }
     }
-    echo json_encode($arr);
+    $output = [$arr,$html];
+    echo json_encode($output);
 }
 ?>

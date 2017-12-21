@@ -86,7 +86,12 @@ function codeAddress() {
                 url:'getLocation.php',
                 data: data,
                 success:function(data){
-                    menuItems = jQuery.parseJSON(data);
+
+                    //Display categories
+                    if (data) {
+                        menuItems = jQuery.parseJSON(data)[0];
+                        $("#mySidenav").html(jQuery.parseJSON(data)[1]);
+                    }
                 }
             });
         
@@ -97,8 +102,12 @@ function codeAddress() {
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
+// Function to get menus
 function getMenu(cat) {
-    var outputText = '';
+    var output = '';
+    console.log(cat);
+    console.log(menuItems);
+    // Display menu items
     $.each( menuItems[cat], function( key, value ) {
         if (value[0]) {
             var is_veg = '<span class="veg"></span>';
@@ -106,9 +115,9 @@ function getMenu(cat) {
             var is_veg = '<span class="nonveg"></span>';
         }
         var divHtml = '<div class="product"><h4 class="productName">'+key+'</h4>'+is_veg+
-            '<p class="productPrice"> $'+value[1]+'</p></div>';
+            '<p class="productPrice"> &#x20B9;'+value[1]+'</p></div>';
 
-        outputText += divHtml;
+        output += divHtml;
     });
-    $('#showMenu').html(outputText);
+    $('#showMenu').html(output);
 }
