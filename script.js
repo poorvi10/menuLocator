@@ -16,20 +16,12 @@ $("#locateMe").click(function() {
 
         var latitude = '10.0158605';
         var longitude = '76.3418666';
-        $.ajax({
-            type:'POST',
-            url:'getLocation.php',
-            data:'latitude='+latitude+'&longitude='+longitude,
-            success:function(address){
-                if(address){
-                    $("#location").html(address+ ' '+ 'Latitude: '+ latitude + '  Longitude: ' +longitude) 
-                    .slideDown("slow");
-                }else{
-                    $("#location").html('Not Available')
-                    .slideDown("slow");
-                }
-            }
-        });
+
+        $("#mySidenav").html('');
+        $("#showMenu").html('');
+
+        var action = 'locateMe';
+        doAjax(latitude, longitude, action);
     }
 });
 
@@ -69,32 +61,17 @@ function codeAddress() {
             var latitude = results[0].geometry.location.lat();
             var longitude = results[0].geometry.location.lng();
             $("#menuSection").css("display","block");
+            $("#mySidenav").html('');
+            $("#showMenu").html('');
 
             $("#showLocation").html(
                 "Latitude: "+latitude+
                 " , " + "Longitude: "+longitude+
                 " , " + "Address:" + address)
             .slideDown("slow");
-            
-            var data = {
-                "lat" :  latitude,
-                "lgt" : longitude,
-                "address" : address
-            }
-            $.ajax({
-                type:'POST',
-                url:'getLocation.php',
-                data: data,
-                success:function(data){
 
-                    //Display categories
-                    if (data) {
-                        menuItems = jQuery.parseJSON(data)[0];
-                        $("#mySidenav").html(jQuery.parseJSON(data)[1]);
-                    }
-                }
-            });
-        
+            var action = 'search';
+            doAjax(latitude, longitude, action);
         } else {
             alert("Geocode was not successful for the following reason: " + status);
         }
@@ -102,11 +79,10 @@ function codeAddress() {
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
-// Function to get menus
+// Get Menu
 function getMenu(cat) {
     var output = '';
-    console.log(cat);
-    console.log(menuItems);
+
     // Display menu items
     $.each( menuItems[cat], function( key, value ) {
         if (value[0]) {
@@ -120,4 +96,32 @@ function getMenu(cat) {
         output += divHtml;
     });
     $('#showMenu').html(output);
+}
+
+// Render menu
+function doAjax(latitude, longitude, action) {
+    $.ajax({
+        type:'POST',
+        url:'getLocation.php',
+        data: 'latitude='+latitude+'&longitude='+longitude+'&action='+action,
+        success:function(data){
+            $("#menuSection").css("display","block");
+
+            // Success handler
+            if (data) {
+                var obj = jQuery.parseJSON(data);
+                menuItems = obj[0];
+                $("#mySidenav").html(obj[1]);
+
+                // Show location 
+                if (obj['location']) {
+                    $("#showLocation").html(
+                        "Latitude: "+latitude+
+                        " , " + "Longitude: "+longitude+
+                        " , " + "Address:" + obj['location'])
+                    .slideDown("slow");
+                }
+            }
+        }
+    });
 }

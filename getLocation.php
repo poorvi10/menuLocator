@@ -1,6 +1,6 @@
 <?php
 //if latitude and longitude are submitted
-if(!empty($_POST['latitude']) && !empty($_POST['longitude'])){
+if(!empty($_POST['action']) && $_POST['action'] == 'locateMe'){
 
     //send request and receive json data by latitude and longitude
     $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($_POST['latitude']).','.trim($_POST['longitude']).'&sensor=false';
@@ -16,12 +16,20 @@ if(!empty($_POST['latitude']) && !empty($_POST['longitude'])){
         $location =  '';
     }
     
+    $menu = getMenu($_POST['latitude'], $_POST['longitude']);
+    $menu['location'] = $location;
+
     //return address to ajax 
-    echo $location;
+    echo json_encode($menu);
+} else {
+
+    /* Show menu items */
+    $menu = getMenu($_POST['latitude'], $_POST['longitude']);
+    echo json_encode($menu);
 }
 
-/* Show menu items */
-if (!empty($_POST['lat']) && !empty($_POST['lgt']) && !empty($_POST['address'])) {
+// Get menu based on location
+function getMenu ($latitude, $latitude) {
     $url = 'https://jsonblob.com/api/jsonBlob/b235e32f-8250-11e7-8e2e-893ffec7f2e1';
     $json = @file_get_contents($url);
     $data = json_decode($json);
@@ -37,7 +45,7 @@ if (!empty($_POST['lat']) && !empty($_POST['lgt']) && !empty($_POST['address']))
             $catName = str_replace(array('/', ' '), '_', $menuItems->category_name);
             if (!in_array($menuItems->category_name, $categories)) {
                 array_push($categories,$menuItems->category_name);
-                $html .= '<div id="'.strtolower($catName).'" class="items active" onclick="getMenu('.strtolower($catName).')"><a href="#">'.$menuItems->category_name.'</a></div>';  
+                $html .= '<div id="'.strtolower($catName).'" class="items active" onclick="getMenu(\''.trim(strtolower($catName)).'\')"><a href="#">'.$menuItems->category_name.'</a></div>';  
             }
             $arr[strtolower($catName)][$menuItems->menu_item_name] = [];
             array_push($arr[strtolower($catName)][$menuItems->menu_item_name], $menuItems->is_veg);
@@ -46,6 +54,6 @@ if (!empty($_POST['lat']) && !empty($_POST['lgt']) && !empty($_POST['address']))
         }
     }
     $output = [$arr,$html];
-    echo json_encode($output);
+    return $output;
 }
 ?>
