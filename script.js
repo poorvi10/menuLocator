@@ -2,6 +2,7 @@
 
 // Get current location
 $("#locateMe").click(function() {
+    $(".loader").css("display","block");
     showLocation();
     // if(navigator.geolocation){
     //     navigator.geolocation.getCurrentPosition(showLocation);
@@ -54,6 +55,7 @@ var menuItems = {};
 // Autocomplete search to get locality, logitude and latitude and to handle the response
 function codeAddress() {
     $("#showLocation").html("");
+    $(".loader").css("display","block");
     geocoder = new google.maps.Geocoder();
     var address = document.getElementById("my-address").value;
     geocoder.geocode( { 'address': address}, function(results, status) {
@@ -106,7 +108,7 @@ function doAjax(latitude, longitude, action) {
         data: 'latitude='+latitude+'&longitude='+longitude+'&action='+action,
         success:function(data){
             $("#menuSection").css("display","block");
-
+            $(".loader").css("display","none");
             // Success handler
             if (data) {
                 var obj = jQuery.parseJSON(data);
