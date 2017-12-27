@@ -2,20 +2,20 @@
 
 // Get current location
 $("#locateMe").click(function() {
-    showLocation();
-    // if(navigator.geolocation){
-    //     navigator.geolocation.getCurrentPosition(showLocation);
-    // }else{ 
-    //     $('#location').html('Geolocation is not supported by this browser.');
-    // }
+    // showLocation();
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(showLocation);
+    }else{ 
+        $('#location').html('Geolocation is not supported by this browser.');
+    }
 
     // Get logitude and latitude and send it to php
     function showLocation(position){
-       // var latitude = position.coords.latitude;
-       // var longitude = position.coords.longitude;
+       var latitude = position.coords.latitude;
+       var longitude = position.coords.longitude;
 
-        var latitude = '10.0158605';
-        var longitude = '76.3418666';
+        // var latitude = '10.0158605';
+        // var longitude = '76.3418666';
 
         $("#mySidenav").html('');
         $("#showMenu").html('');
