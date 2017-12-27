@@ -2,27 +2,28 @@
 
 // Get current location
 $("#locateMe").click(function() {
-    $(".loader").css("display","block");
+    showLocation();
+    // if(navigator.geolocation){
+    //     navigator.geolocation.getCurrentPosition(showLocation);
+    // }else{ 
+    //     $('#location').html('Geolocation is not supported by this browser.');
+    // }
 
-    // Get latitude and longitude
-    if (navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(showLocation);
-    } else { 
-        $('#location').html('Geolocation is not supported by this browser.');
+    // Get logitude and latitude and send it to php
+    function showLocation(position){
+       // var latitude = position.coords.latitude;
+       // var longitude = position.coords.longitude;
+
+        var latitude = '10.0158605';
+        var longitude = '76.3418666';
+
+        $("#mySidenav").html('');
+        $("#showMenu").html('');
+
+        var action = 'locateMe';
+        doAjax(latitude, longitude, action);
     }
 });
-
-// Get logitude and latitude and send it to php
-function showLocation(position){
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
-
-    $("#mySidenav").html('');
-    $("#showMenu").html('');
-
-    var action = 'locateMe';
-    doAjax(latitude, longitude, action);
-}
 
 /* Search option Setion */
 
@@ -53,7 +54,6 @@ var menuItems = {};
 // Autocomplete search to get locality, logitude and latitude and to handle the response
 function codeAddress() {
     $("#showLocation").html("");
-    $(".loader").css("display","block");
     geocoder = new google.maps.Geocoder();
     var address = document.getElementById("my-address").value;
     geocoder.geocode( { 'address': address}, function(results, status) {
@@ -106,7 +106,6 @@ function doAjax(latitude, longitude, action) {
         data: 'latitude='+latitude+'&longitude='+longitude+'&action='+action,
         success:function(data){
             $("#menuSection").css("display","block");
-            $(".loader").css("display","none");
 
             // Success handler
             if (data) {
