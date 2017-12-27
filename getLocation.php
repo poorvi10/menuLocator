@@ -29,7 +29,7 @@ if(!empty($_POST['action']) && $_POST['action'] == 'locateMe'){
 }
 
 // Get menu based on location
-function getMenu ($latitude, $latitude) {
+function getMenu ($latitude, $longitude) {
     $url = 'https://jsonblob.com/api/jsonBlob/b235e32f-8250-11e7-8e2e-893ffec7f2e1';
     $json = @file_get_contents($url);
     $data = json_decode($json);
